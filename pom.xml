@@ -26,6 +26,7 @@
         <java.dev.jna.version>5.5.0</java.dev.jna.version>
         <httpcore.version>4.4.1</httpcore.version>
         <httpclient.version>4.4.1</httpclient.version>
+        <fastjson.version>1.2.56</fastjson.version>
     </properties>
 
     <!-- 子模块默认拥有 -->
@@ -47,6 +48,13 @@
     <!-- 子模块只有申请时，才会使用 -->
     <dependencyManagement>
         <dependencies>
+
+            <!-- fastJson 版本 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
 
             <!-- springboot web启动器 -->
             <dependency>
