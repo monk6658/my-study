@@ -7,19 +7,7 @@ package com.leetcode.dynamicprogram;
 public class decodeNumToChar {
 
 
-    public static void main(String[] args) {
-        String s = "12";
-//        s = "12137";    // 5
-//        s = "06";       // 0
-
-//        System.out.println(numDecodings(s));
-//        System.out.println(numDecodings2(s));
-
-
-    }
-
-
-    /**
+    /*
      *
      * 'A' -> 1
      * 'B' -> 2
@@ -38,6 +26,18 @@ public class decodeNumToChar {
      * 输出：0
      * 解释："06" 不能映射到 "F" ，因为字符串含有前导 0（"6" 和 "06" 在映射中并不等价）。
      */
+    public static void main(String[] args) {
+        String s = "12";
+//        s = "12137";    // 5
+//        s = "06";       // 0
+
+//        System.out.println(numDecodings(s));
+//        System.out.println(numDecodings2(s));
+
+
+    }
+
+
     public static int numDecodings(String s) {
         int length = s.length();
 
