@@ -1,10 +1,10 @@
-package com.springbootstudy;
+package com.rabbitmqava;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SpringbootStudyApplicationTests {
+class RabbitmqJavaApplicationTests {
 
     @Test
     void contextLoads() {

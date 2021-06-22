@@ -48,12 +48,15 @@ public class HttpUtils {
 
     /*** HTTP内容类型。相当于form表单的形式，提交数据*/
     private static final String CONTENT_TYPE_JSON_URL = "application/json;charset=utf-8";
-
-    /*** 连接管理器 */
-    private static PoolingHttpClientConnectionManager pool;
-    /*** 请求配置 */
-    private static RequestConfig requestConfig;
+    /** 默认超时时间 */
+    private static final int TIME_OUT_DEFAULT = 10 * 6000;
+    /*** 请求客户端 */
+    private static CloseableHttpClient closeableHttpClient;
     static {
+        // 请求配置参数
+        RequestConfig requestConfig = null;
+        // 连接管理器
+        PoolingHttpClientConnectionManager pool = null;
         try {
             SSLContextBuilder builder = new SSLContextBuilder();
             builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
@@ -77,11 +80,20 @@ public class HttpUtils {
                     .setSocketTimeout(socketTimeout)
                     .setConnectTimeout(connectTimeout)
                     .build();
+
         }catch (Exception e) {
-            e.printStackTrace();
+            // 设置请求超时时间
+            requestConfig = RequestConfig.custom().setSocketTimeout(TIME_OUT_DEFAULT).setConnectTimeout(TIME_OUT_DEFAULT).setConnectionRequestTimeout(TIME_OUT_DEFAULT).build();
         }
-        // 设置请求超时时间
-        requestConfig = RequestConfig.custom().setSocketTimeout(500000).setConnectTimeout(500000).setConnectionRequestTimeout(500000).build();
+
+        closeableHttpClient = HttpClients.custom()
+                // 设置连接池管理
+                .setConnectionManager(pool)
+                // 设置请求配置
+                .setDefaultRequestConfig(requestConfig)
+                // 设置重试次数
+                .setRetryHandler(getRetryHandler())
+                .build();
     }
 
     /**
@@ -117,18 +129,20 @@ public class HttpUtils {
     }
 
     /**
-     * 获取http client 对象
-     * @return CloseableHttpClient
+     * 获取 HttpPost 对象
+     * @param httpUrl 请求地址
+     * @param params 请求参数
+     * @param contentType 请求类型
+     * @return HttpPost 对象
      */
-    private static CloseableHttpClient getHttpClient() {
-        return HttpClients.custom()
-                // 设置连接池管理
-                .setConnectionManager(pool)
-                // 设置请求配置
-                .setDefaultRequestConfig(requestConfig)
-                // 设置重试次数
-                .setRetryHandler(getRetryHandler())
-                .build();
+    private static HttpPost getHttpPort(String httpUrl, String params, String contentType){
+        HttpPost httpPost = new HttpPost(httpUrl);
+        if (params != null && params.trim().length() > 0) {
+            StringEntity stringEntity = new StringEntity(params, CHARSET_UTF_8);
+            stringEntity.setContentType(contentType);
+            httpPost.setEntity(stringEntity);
+        }
+        return httpPost;
     }
 
     /**
@@ -137,23 +151,27 @@ public class HttpUtils {
      * @param params  组装好参数
      * @return 响应结果
      */
-    public static String sendHttpPostForm(String httpUrl, String params) {
-        HttpPost httpPost = new HttpPost(httpUrl);
-        if (params != null && params.trim().length() > 0) {
-            StringEntity stringEntity = new StringEntity(params, CHARSET_UTF_8);
-            stringEntity.setContentType(CONTENT_TYPE_FORM_URL);
-            httpPost.setEntity(stringEntity);
-        }
-        return sendHttp(httpPost);
+    public static String sendHttpPostForm(String httpUrl, String params) throws IOException {
+        return sendHttp(getHttpPort(httpUrl,params,CONTENT_TYPE_FORM_URL));
     }
 
+
+    /**
+     * 发送请求
+     * @param httpUrl 地址
+     * @param params  组装好参数
+     * @return 响应结果
+     */
+    public static String sendHttpPostJson(String httpUrl, String params) throws IOException {
+        return sendHttp(getHttpPort(httpUrl,params,CONTENT_TYPE_JSON_URL));
+    }
     /**
      * 以问号传参的方式，发送get请求
      * @param httpUrl 请求地址
      * @param params 请求参数
      * @return 响应结果
      */
-    public static String sendHttpGet(String httpUrl, String params) {
+    public static String sendHttpGet(String httpUrl, String params) throws IOException {
         return sendHttpGet(httpUrl + "?" + params);
     }
 
@@ -162,7 +180,7 @@ public class HttpUtils {
      * @param httpUrl 请求地址
      * @return 请求结果
      */
-    public static String sendHttpGet(String httpUrl){
+    public static String sendHttpGet(String httpUrl) throws IOException {
         HttpGet httpGet = new HttpGet(httpUrl);
         return sendHttp(httpGet);
     }
@@ -172,30 +190,21 @@ public class HttpUtils {
      * @param httpRequestBase post、get请求体
      * @return 响应结果
      */
-    private static String sendHttp(HttpRequestBase httpRequestBase) {
-        CloseableHttpClient httpClient = null;
+    private static String sendHttp(HttpRequestBase httpRequestBase) throws IOException {
         CloseableHttpResponse response = null;
         try {
             String rs = null;
-            httpClient = getHttpClient();
-            response = httpClient.execute(httpRequestBase);
+            response = closeableHttpClient.execute(httpRequestBase);
             HttpEntity entity = response.getEntity();
             rs = EntityUtils.toString(entity, CHARSET_UTF_8);
             //手动关闭流连接
             EntityUtils.consume(entity);
             return rs;
-        }catch (Exception e) {
-            e.printStackTrace();
         }finally {
-            try {
-                if (response != null) {
-                    response.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (response != null) {
+                response.close();
             }
         }
-        return null;
     }
 
 

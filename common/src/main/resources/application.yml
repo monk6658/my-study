@@ -1,9 +1,0 @@
-
-
-pool:
-  threadNamePrefix: demo-pool-%d
-  coreSize: 5
-  maxSize: 10
-  keepAliveTime: 5
-  capacity: 20
-

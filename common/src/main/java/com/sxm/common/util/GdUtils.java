@@ -3,6 +3,7 @@ package com.sxm.common.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,7 +32,7 @@ public class GdUtils {
      * @param bts 基站对峙
      * @return 解析结果
      */
-    public static String changeBaseStation(String bts){
+    public static String changeBaseStation(String bts) throws IOException {
         String url = "http://apilocate.amap.com/position";
         Map<String,Object> map = new HashMap<>();
         // f82a321f5e357a01d589978d6bcb0a6c
@@ -65,7 +66,7 @@ public class GdUtils {
         return "";
     }
 
-    public static String changeGprs(String gprs){
+    public static String changeGprs(String gprs) throws IOException {
         String url = "https://restapi.amap.com/v3/geocode/regeo";
         Map<String,Object> map = new HashMap<>();
         map.put("key","0e070da4869c3bce7680b582dd6963e2");
@@ -94,9 +95,10 @@ public class GdUtils {
         return "";
     }
 
-    public static void main(String[] args) {
-        changeBaseStation("460,00,18420,53792,-73");
-//        changeGprs("112.51732421875,37.84060031467014");
+    public static void main(String[] args) throws IOException {
+//         4116|  460|   00|16662
+        changeBaseStation("460,00,6662,04116,-97");
+//        changeGprs("112.51732421875,37.84060031467014");24783
     }
 
 

@@ -11,12 +11,17 @@
     <groupId>com.example</groupId>
     <artifactId>my-study</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>demo</name>
+    <name>my-study-parent</name>
+    <packaging>pom</packaging>
     <description>项目学习总结</description>
 
     <modules>
         <module>common</module>
         <module>netty-study</module>
+        <module>my-java</module>
+        <module>springboot-study</module>
+        <module>rabbitmq-study/rabbitmq-springboot</module>
+        <module>rabbitmq-study/rabbitmq-java</module>
     </modules>
 
     <properties>
@@ -27,6 +32,8 @@
         <httpcore.version>4.4.1</httpcore.version>
         <httpclient.version>4.4.1</httpclient.version>
         <fastjson.version>1.2.56</fastjson.version>
+        <springboot.version>2.4.4</springboot.version>
+        <rabbitmq.version>4.12.0</rabbitmq.version>
     </properties>
 
     <!-- 子模块默认拥有 -->
@@ -48,6 +55,19 @@
     <!-- 子模块只有申请时，才会使用 -->
     <dependencyManagement>
         <dependencies>
+            <!-- rabbitmq-springboot 模块 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-amqp</artifactId>
+                <version>${springboot.version}</version>
+            </dependency>
+
+            <!-- 源生rabbitmq版本 -->
+            <dependency>
+                <groupId>com.rabbitmq</groupId>
+                <artifactId>amqp-client</artifactId>
+                <version>${rabbitmq.version}</version>
+            </dependency>
 
             <!-- fastJson 版本 -->
             <dependency>
@@ -60,7 +80,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
-                <version>2.4.4</version>
+                <version>${springboot.version}</version>
             </dependency>
 
             <!-- netty 开发包 -->
@@ -106,6 +126,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${springboot.version}</version>
             </plugin>
         </plugins>
     </build>

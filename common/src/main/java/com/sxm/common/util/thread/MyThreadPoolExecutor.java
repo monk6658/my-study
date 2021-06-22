@@ -1,6 +1,7 @@
-package com.mythread.threadpool;
+package com.sxm.common.util.thread;
 
-import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.*;
 import java.util.concurrent.locks.Condition;
@@ -19,6 +20,7 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
     /*** 暂停状态 */
     private final Condition unPaused = lock.newCondition();
 
+    /*** 线程池全局状态标识 */
     private boolean isPaused;
 
     /**
@@ -86,14 +88,27 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
             while (isPaused) {
                 unPaused.await(); // 阻塞挂起，释放锁
             }
+            // 每次线程执行前，清除当前线程变量
+//            RunningData.flushAll();
+            long start = System.nanoTime();
+            System.out.println("当前线程："+ t.getThreadGroup().getName() + " " + t.getName()+ "正准备执行任务......start " + start);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
             lock.unlock();
         }
+    }
 
-        System.out.println(t.getUncaughtExceptionHandler());
-        System.out.println("当前线程：" + t.getName()+ "正准备执行任务......start");
+
+    /**
+     * 钩子方法，执行任务后执行
+     * @param t 运行任务r的线程
+     * @param r 要执行的任务
+     */
+    @Override
+    protected void afterExecute(Runnable r, Throwable t) {
+        long end = System.nanoTime();
+        System.out.println("当前线程："+Thread.currentThread().getName()+ "执行任务结束......end " + end);
     }
 
     /**
@@ -102,7 +117,6 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
     @Override
     protected void terminated() {
         super.terminated();
-        System.out.println("线程池执行完成");
     }
 
     /**
@@ -130,20 +144,12 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
         }
     }
 
-    /**
-     * 钩子方法，执行任务后执行
-     * @param t 运行任务r的线程
-     * @param r 要执行的任务
-     */
-    @Override
-    protected void afterExecute(Runnable r, Throwable t) {
-        System.out.println("当前线程："+Thread.currentThread().getName()+ "执行任务结束......end");
-    }
 
     /**
      * 自定义拒绝策略
      */
     public static class MyRejectedHandler implements RejectedExecutionHandler {
+        private final Logger loggerEr = LogManager.getLogger("sysPack");
 
         public MyRejectedHandler() { }
 
@@ -154,39 +160,12 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
          */
         @Override
         public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
+            loggerEr.error("task " + r.toString() + " reject from " + e.toString());
             if (!e.isShutdown()) {
                 r.run();
             }
         }
     }
 
-
-    public static void main(String[] args) throws InterruptedException {
-        CustomizableThreadFactory customizableThreadFactory = new CustomizableThreadFactory("sever-");
-        int a = Runtime.getRuntime().availableProcessors() * 2;
-        MyThreadPoolExecutor myThreadPoolExecutor = new MyThreadPoolExecutor(2, 5, 0L, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<>(),customizableThreadFactory);
-        System.nanoTime();
-        // 长时间线程回收
-        myThreadPoolExecutor.allowCoreThreadTimeOut(true);
-
-        //可以访问任务队列
-        BlockingQueue<Runnable> queue = myThreadPoolExecutor.getQueue();
-
-
-        for(int i = 0; i < 50000 * 100; i++){
-            myThreadPoolExecutor.execute(()->{
-                System.out.println(111);
-            });
-            myThreadPoolExecutor.execute(()->{
-                System.out.println(111);
-            });
-            myThreadPoolExecutor.execute(()->{
-                System.out.println(111);
-            });
-        }
-
-
-        myThreadPoolExecutor.shutdown();
-    }
 
 }
