@@ -1,1 +1,16 @@
+spring:
+  redis:
+    password: 123456
+    timeout: 60000 #连接超时时间，单位毫秒，默认为0
+    sentinel:
+      master: mymaster
+      nodes: 192.168.1.99:26379,192.168.1.99:26380,192.168.1.99:26381  # 哨兵的IP:Port列表
+    lettuce: # 或 jedis
+      shutdown-timeout: 10000
+      pool:
+        max-active: 15
+        max-wait: 4
+        max-idle: 8
+        min-idle: 5
+    database: 11
 

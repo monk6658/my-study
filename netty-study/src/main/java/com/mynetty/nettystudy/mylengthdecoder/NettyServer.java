@@ -43,7 +43,7 @@ public class NettyServer {
                             ch.pipeline().addLast(new NettyServerHandler());
                         }
                     });
-            ChannelFuture channelFuture = bootstrap.bind(9999).sync();
+            ChannelFuture channelFuture = bootstrap.bind(10002).sync();
             channelFuture.channel().closeFuture().sync();
         }catch (Exception e){
             log.error("启动异常，优雅关闭",e);

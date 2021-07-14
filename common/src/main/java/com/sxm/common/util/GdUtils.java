@@ -97,8 +97,8 @@ public class GdUtils {
 
     public static void main(String[] args) throws IOException {
 //         4116|  460|   00|16662
-        changeBaseStation("460,00,6662,04116,-97");
-//        changeGprs("112.51732421875,37.84060031467014");24783
+        System.out.println(changeBaseStation("460,00,34304,63653,-97"));
+        System.out.println(changeGprs("112.51732421875,37.84060031467014"));
     }
 
 
