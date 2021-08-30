@@ -20,6 +20,7 @@
         <module>netty-study</module>
         <module>my-java</module>
         <module>springboot-study</module>
+        <module>springboot-redis</module>
         <module>rabbitmq-study/rabbitmq-springboot</module>
         <module>rabbitmq-study/rabbitmq-java</module>
     </modules>
