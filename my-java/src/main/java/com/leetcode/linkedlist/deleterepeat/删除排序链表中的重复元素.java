@@ -1,4 +1,7 @@
 package com.leetcode.linkedlist.deleterepeat;
+
+import com.common.ListNode;
+
 /**
  * 
  * @author zxl

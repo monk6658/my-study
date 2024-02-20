@@ -1,6 +1,6 @@
 package com.leetcode.str;
 
-import java.util.Arrays;
+import java.util.Calendar;
 
 /**
  * 字符串反转
@@ -9,14 +9,21 @@ public class ReversalStr {
 
     public static void main(String[] args) {
 
-        ReversalStr reversalStr = new ReversalStr();
+//        ReversalStr reversalStr = new ReversalStr();
+//
+//        String str = "abcdefg";
+//        int k = 2;
+//
+//        String result = reversalStr.reverseStr(str, k);
+//        System.out.println(result);
 
-        String str = "abcdefg";
-        int k = 2;
+//        System.out.println(new Date("2/21/22 0:00").getTime());;
+//
+//        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date("2/21/22 0:00")));
+        final Calendar c = Calendar.getInstance();
 
-        String result = reversalStr.reverseStr(str, k);
-        System.out.println(result);
-
+        System.out.println(c.get(Calendar.DATE));
+        System.out.println(c.getActualMaximum(Calendar.DATE));
     }
 
     /**

@@ -20,7 +20,6 @@
         <module>netty-study</module>
         <module>my-java</module>
         <module>springboot-study</module>
-        <module>springboot-redis</module>
         <module>rabbitmq-study/rabbitmq-springboot</module>
         <module>rabbitmq-study/rabbitmq-java</module>
     </modules>
@@ -78,6 +77,20 @@
                 <version>${fastjson.version}</version>
             </dependency>
 
+
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>5.7.12</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>2.0.1.Final</version>
+            </dependency>
+            
             <!-- springboot web启动器 -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -122,6 +135,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>${springboot.version}</version>
             </dependency>
             <dependency>
                 <groupId>redis.clients</groupId>

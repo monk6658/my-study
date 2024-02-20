@@ -29,6 +29,9 @@ import javax.net.ssl.SSLHandshakeException;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.UnknownHostException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 /**
  * http 工具类
@@ -208,9 +211,26 @@ public class HttpUtils {
     }
 
 
+    public static void main(String[] args) throws IOException, ParseException {
 
+//        String s = sendHttpGet("http://localhost:50000/wms/test?authToken=b980836a-6a5f-4a69-a4a1-916eba952034");
+//        System.out.println(s);
 
+        String s = "2022-02-01 00:00:01";
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+        System.out.println(dateFormat.parse(s));
+
+//        String s = sendHttpPostJson("http://localhost:50000/wms/doLogin","{\n" +
+//                "    \"username\":\"qpadmin\",\n" +
+//                "    \"password\": \"123456\"\n" +
+//                "}");
+//        System.out.println(s);
+
+//
+//        s = sendHttpGet("http://localhost:50000/wms/test");
+//        System.out.println(s);
+    }
 
 
 }

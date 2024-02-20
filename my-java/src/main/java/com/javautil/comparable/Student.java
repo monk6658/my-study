@@ -1,5 +1,9 @@
 package com.javautil.comparable;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.Objects;
 
 /**
@@ -7,6 +11,9 @@ import java.util.Objects;
  * @author zxl
  * @date 2020/10/27 18:00
  */
+@Setter
+@Getter
+@NoArgsConstructor
 public class Student implements Comparable<Student>{
 
     /*** 名字 */
